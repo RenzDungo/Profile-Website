@@ -1,4 +1,3 @@
-
 import "../components/styles/home.css"
 export default function Home() {
   return (

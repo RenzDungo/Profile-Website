@@ -1,11 +1,11 @@
-import React from "react";
+
 import "./styles/navbar.css"
 import { NavbarData } from "./navbardata";
 interface NavBarProps{
   setCurrentPage: (page:string) => void;
   currentPage?: string;
 }
-export default function Navbar({setCurrentPage, currentPage}: NavBarProps) {
+export default function Navbar({setCurrentPage,}: NavBarProps) {
   return (
     <nav className="Mainbar">
       <ul className="toolbox">

@@ -1,4 +1,4 @@
-import React from "react"
+
 import "../components/styles/contact.css"
 import ghimg from "../assets/images/GithubMark.png"
 import liimg from "../assets/images/Linkedin.png"

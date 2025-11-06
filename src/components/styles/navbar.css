@@ -1,0 +1,32 @@
+.Mainbar{
+    background: linear-gradient(90deg,#1F3247 0%, rgba(14, 20, 27, 1) 100%);
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:50px;
+    justify-content: center;
+    align-content: center;
+}
+
+.Mainbar .toolbox{
+    display: flex;
+    flex-direction: row;
+    gap: min(5em, 2%);
+    justify-content: center;
+}
+
+.navbutton {
+    width: min(150px,20%);
+    height: 80%;
+    background-color:#1C252E ;
+    color: white;
+    border-radius: 10px;
+    border: 1px solid beige;
+    display: flex;
+    justify-content: center;
+}
+.navbutton:hover{
+    border: 1px solid #3A86FF;
+    cursor: pointer;
+}

@@ -1,0 +1,19 @@
+.contactpage{
+    height: 100%;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.contactpage .contactcontainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.contactpage .contactcontainer .itemcontainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10%;
+}

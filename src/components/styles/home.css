@@ -1,0 +1,46 @@
+.background{
+    height:100%;
+    width:100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding-top: min(5em, 10%);
+}
+
+.background .mainbox{
+    width:80%;
+    height:80%;
+    background-color: #0A192F;
+    border: 1px solid grey;
+    color: #E2E8F0;
+    border-radius: 10px;
+    display: flex; 
+    flex-direction: row;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.mainbox:hover{
+    border: 2px solid #3B82F6;
+}
+ .box1 {
+    display: flex;
+    flex-direction: column;
+    width:50%;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.box2{
+    width:50%;
+    height:100%;
+    clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+    background-image: url("../../assets/images/Profile1.png");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+.text{
+    width: 60%;
+}

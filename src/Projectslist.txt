@@ -1,0 +1,11 @@
+Magic Collection App
+Database collection application that uses the scryfall API for card searching, an external server api made with JS is used to store the cards from the scryfall API to the database. Originally created with net maui but I'm currently working on react native app.
+
+Using selenium I created an application that scrapes through data for products in stock such as graphics cards, Magic the gathering cards and Pokemon products. It checked html containers for In stock markers or Numbers within certain containers that would indicate if the project was in stock.
+
+Using OpenCV and scryfall API I created a desktop application that can dectect cards from pictures. Originally I wanted to implement in my Magic Collection App but it wasn't working with the application so I'm hoping with react native it becomes implemented easier.
+
+Using an arudino nano and a bluetooth scanner, items could be scanned and tracked easily. The arduino would be able to run through an API to store data for inventory. The project planned to digitize logistics by allowing for quick access through inventory by AR and watch as inventory changes are made in real time.
+
+Assembled AM/FM radio using electrical components. Soldered individual components onto a PCB. Used electrical testing equipment such as Oscilloscope, signal generators, and spectrum analyzers for troubleshooting and testing.
+

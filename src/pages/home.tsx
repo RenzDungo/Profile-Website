@@ -1,0 +1,22 @@
+
+import "../components/styles/home.css"
+export default function Home() {
+  return (
+    <div className="background">
+      <div className="mainbox">
+        <div className="box1">
+          <h1>Renz Dungo</h1>
+          <h3>B.S Computer Engineering Technology</h3>
+          <p className="text"> 
+            Hello, I'm Renz — a Computer Engineer and 
+            Software Developer with a strong passion for technology 
+            that began at age 13. I design and build PCBs, 
+            develop web applications, and assemble computers.
+          </p>
+        </div>
+        <div className="box2">
+        </div>
+      </div>
+    </div>
+  );
+} 

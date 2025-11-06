@@ -5,7 +5,7 @@ export default function Home() {
       <div className="mainbox">
         <div className="box1">
           <h1>Renz Dungo</h1>
-          <h3>B.S Computer Engineering Technology</h3>
+          <h4>B.S Computer Engineering Technology</h4>
           <p className="text"> 
             Hello, I'm Renz — a Computer Engineer and 
             Software Developer with a strong passion for technology 

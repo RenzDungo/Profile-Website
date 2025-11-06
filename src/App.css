@@ -16,3 +16,19 @@
   width:100%;
   padding-top: 80px;
 }
+
+@media (max-width:762px) {
+  .hero{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    font-size: clamp(.8rem, 8vw, 1rem);
+  }
+  .hero .pages{
+  height: 100%;
+  width:100%;
+  padding-top: .8rem;
+}
+
+}

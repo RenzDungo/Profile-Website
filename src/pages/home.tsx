@@ -1,4 +1,5 @@
 import "../components/styles/home.css"
+import profilepic from "../assets/images/Profile1.png"
 export default function Home() {
   return (
     <div className="background">
@@ -14,6 +15,7 @@ export default function Home() {
           </p>
         </div>
         <div className="box2">
+          <img className="profilepic" src={profilepic} />
         </div>
       </div>
     </div>

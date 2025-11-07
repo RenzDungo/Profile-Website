@@ -141,6 +141,7 @@
   font-weight: 600;
   padding: 10px 0;
   transition: background 0.8s ease, color 0.8s ease;
+  font-size: clamp(.4rem, 2vw, 1rem);
 }
 
 /* Active is dark (black), inactive is light (white) */

@@ -53,6 +53,21 @@
     width: 60%;
 }
 
+.skillslist{
+    display: flex;
+    flex-direction: column;
+}
+.skillsgallery{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10%;
+}
+
+.skillsgallery .skillsimage{
+    height:auto;
+    width:15%;
+}
 @media (max-width:762px) {
     .background{
     height:100%;
@@ -88,7 +103,7 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    font-size: clamp(.4rem, 8vw, 1rem);
+    font-size: clamp(.4rem, 4vw, .6rem);
     }
     .box2{
     width:50%;
@@ -107,5 +122,23 @@
     }   
     .text{
     width: 60%;
+    }
+
+    .skillslist{
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
+    }
+    .skillsgallery{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .6rem;
+    }
+    
+    .skillsgallery .skillsimage{
+        height:2rem;
+        width:2rem;
     }
 }

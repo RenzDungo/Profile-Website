@@ -1,5 +1,10 @@
 import "../components/styles/home.css"
 import profilepic from "../assets/images/Profile1.png"
+import cpp from "../assets/images/Cplusplus.png"
+import js from "../assets/images/javascript.png"
+import asm from "../assets/images/asm.jpg"
+import python from "../assets/images/python.jpg"
+import vhdl from "../assets/images/vhdl.png"
 export default function Home() {
   return (
     <div className="background">
@@ -13,6 +18,16 @@ export default function Home() {
             that began at age 13. I design and build PCBs, 
             develop web applications, and assemble computers.
           </p>
+          <div className="skillslist">
+            <h4>Skills:</h4>
+            <div className="skillsgallery">
+              <img className="skillsimage" src={cpp}/>
+              <img className="skillsimage" src={js}/>
+              <img className="skillsimage" src={asm}/>
+              <img className="skillsimage" src={python}/>
+              <img className="skillsimage" src={vhdl}/>
+            </div>
+          </div>
         </div>
         <div className="box2">
           <img className="profilepic" src={profilepic} />

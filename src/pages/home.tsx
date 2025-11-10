@@ -21,14 +21,29 @@ export default function Home() {
           <div className="skillslist">
             <h4>Skills:</h4>
             <div className="skillsgallery">
-              <img className="skillsimage" src={cpp}/>
-              <img className="skillsimage" src={js}/>
-              <img className="skillsimage" src={asm}/>
-              <img className="skillsimage" src={python}/>
-              <img className="skillsimage" src={vhdl}/>
+            <div className="skillsimage">
+              <img src={cpp} />
+              <div className="overlay-text">C++</div>
+            </div>
+            <div className="skillsimage">
+              <img src={js} />
+              <div className="overlay-text">JavaScript</div>
+            </div>
+            <div className="skillsimage">
+              <img src={asm} />
+              <div className="overlay-text">Assembly</div>
+            </div>
+            <div className="skillsimage">
+              <img src={python} />
+              <div className="overlay-text">Python</div>
+            </div>
+            <div className="skillsimage">
+              <img src={vhdl} />
+              <div className="overlay-text">VHDL</div>
+            </div>
             </div>
           </div>
-        </div>
+        </div>  
         <div className="box2">
           <img className="profilepic" src={profilepic} />
         </div>

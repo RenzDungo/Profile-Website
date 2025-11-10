@@ -101,6 +101,7 @@
 .skillsimage:hover .overlay-text {
     opacity: 1;
     border: 1px solid blue;
+    cursor: pointer;
   }
 
 @media (max-width:762px) {

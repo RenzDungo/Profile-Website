@@ -3,6 +3,7 @@ import "../components/styles/contact.css"
 import ghimg from "../assets/images/GithubMark.png"
 import liimg from "../assets/images/Linkedin.png"
 import gmimg from "../assets/images/Gmail.png"
+import resumeimg from "../assets/images/resume.png"
 
 const handleCopyEmail = () => {
   const email = "renzdungo2@gmail.com";
@@ -90,6 +91,18 @@ export default function Contact() {
                         <img className="img-hover" src={gmimg} style={{width:"100px",height:"100px"}}/>
                     </a>
                     <h1>Gmail</h1>
+                </div>
+                <div className="itemcontainer">
+                    <a href="https://flowcv.com/resume/641uttpo3f7u" target="_blank" rel="noopener noreferrer">
+                        <img className="img-hover" src={resumeimg} style={{width:"100px",height:"100px"}}/>
+                    </a>
+                    <h1>Hardware Resume</h1>
+                </div>
+                <div className="itemcontainer">
+                    <a href="https://flowcv.com/resume/bt1raucui9t0" target="_blank" rel="noopener noreferrer">
+                        <img className="img-hover" src={resumeimg} style={{width:"100px",height:"100px"}}/>
+                    </a>
+                    <h1>Software Resume</h1>
                 </div>
             </div>
         </div>

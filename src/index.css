@@ -1,0 +1,49 @@
+html,
+body,
+#root {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* background-image: url("/background.png"); */
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+.overlay-content {
+  display: inline-flex;     /* shrink to largest child */
+  flex-direction: column;
+  align-items: flex-start;    /* right-aligned text */
+  max-width: 27%;
+}
+
+.intro-text {
+  font-size: clamp(0.6rem, 2vw, 1rem);
+  text-align: left;
+}
+
+.section-separator {
+  width: 100%;              /* matches widest child */
+  height: 3px;
+  margin-top: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+}
+
+.tech-icon {
+  width: clamp(46px, 4vw, 80px);
+  height: clamp(46px, 4vw, 80px);
+  border-radius: 50%;      /* makes it a circle */
+  object-fit: contain;     /* keeps logo proportions */
+  background-color: white;  /* subtle contrast */
+  padding: 1px;            /* spacing inside the circle */
+}
+
+.tech-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}

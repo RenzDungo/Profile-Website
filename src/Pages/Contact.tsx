@@ -33,7 +33,7 @@ export default function ContactPage({ innerRef }: SectionProps) {
     };
     const [showAlert, setShowAlert] = useState(false);
     return(
-        <Container fluid ref={innerRef} style={{ paddingTop:"20%"}}>
+        <Container fluid ref={innerRef}>
         <Row className='d-flex justify-content-center '>
             <Col xs={12} md={6} lg={4} className="d-flex flex-column align-items-center text-center gap-5"> 
                 <h1>References and Contact</h1>

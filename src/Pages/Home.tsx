@@ -22,7 +22,7 @@ export default function Home({ innerRef }: SectionProps) {
               <div className="overlay-content text-end">
                 <Card.Title
                   className="pt-3"
-                  style={{ fontSize: "clamp(1rem, 5vw, 3rem)" }}
+                  style={{ fontSize: "clamp(1rem, 5vw, 4rem)" }}
                 >
                   Automating Life
                 </Card.Title>

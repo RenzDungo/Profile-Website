@@ -1,12 +1,17 @@
-import { Container, Row, Col, Card,} from "react-bootstrap";
-
+import { Container, Row, Col, Card, Modal} from "react-bootstrap";
+import demoVideo from "../assets/videodemonstration.mp4";
+import sPCB from "../assets/SPCB.png";
+import sPCB2 from "../assets/SPCB2.png";
+import lPCB from "../assets/LPCB.png";
+import { useState } from "react";
 interface SectionProps {
   innerRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function Projectpage({ innerRef }: SectionProps) {
+  const [show, setShow] = useState(false);
   return (
-    <Container ref={innerRef}>
+    <Container ref={innerRef} style={{paddingBottom:"20%"}}>
       <Row>
         <Col className=" d-flex align-items-center justify-content-center">
           <h1>Projects</h1>
@@ -14,7 +19,7 @@ export default function Projectpage({ innerRef }: SectionProps) {
       </Row>
       <Row>
         <Col  className=" d-flex align-items-center justify-content-center pt-5">
-            <h5>Click the Cards for more information</h5>
+            <h5>If the card is hoverable, Click it for more information!</h5>
         </Col>
       </Row>
       <Row>
@@ -86,7 +91,8 @@ export default function Projectpage({ innerRef }: SectionProps) {
         <Col  className=" d-flex align-items-center justify-content-center pt-5">
             <h3>Hardware</h3>     
         </Col>
-        <Row className="pt-5 g-4 d-flex flex-row">
+      </Row>
+      <Row className="pt-5 g-4 d-flex flex-row">
         <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
                 <Card bg="dark" text="white" className="h-100 w-100">
             <Card.Header>
@@ -107,7 +113,7 @@ export default function Projectpage({ innerRef }: SectionProps) {
             </Card.Header>
             <Card.Body>
                 <Card.Text> Automated Dog feeder controlled by an arduino nano. 
-                        Simple system that uses a servo motor to rotate a food dispenser.
+                        Simple system that uses a servo motor to rotate a food dispenser using gears.
                 </Card.Text>
             </Card.Body>
           </Card>
@@ -126,9 +132,9 @@ export default function Projectpage({ innerRef }: SectionProps) {
           </Card>
         </Col>
         </Row>
-        <Row className="pt-5 g-4 d-flex flex-column  ">
-            <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-                <Card bg="dark" text="white" className="h-100 w-100">
+        <Row className="pt-5 g-4 d-flex flex-row">
+          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
+          <Card bg="dark" text="white" className="h-100 w-100">
             <Card.Header>
                 <Card.Title>Automatic Light Detection</Card.Title>
             </Card.Header>
@@ -141,7 +147,46 @@ export default function Projectpage({ innerRef }: SectionProps) {
             </Card.Body>
           </Card>
         </Col>
-        </Row>
+        <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
+          <Card bg="dark" text="white" className="h-100 w-100" onClick={() => setShow(true)} style={{ cursor: "pointer" }}>
+            <Card.Header>
+                <Card.Title>Spotify MP3 Player</Card.Title>
+            </Card.Header>
+          <Card.Body>
+            <Card.Text>Designed a PCB that used an ESP32 microcontroller to connect to Spotify's API to control music playback. Created my own server to handle Spotify Refresh Tokens while ESP32 accesses this server for current song list and changing songs.</Card.Text>
+          </Card.Body>
+        </Card>
+        <Modal show={show} onHide={() => setShow(false)} size="lg" centered>
+          <Modal.Body className="p-0">
+            <video
+              src={demoVideo}
+              controls
+              autoPlay
+              style={{ width: "100%" }}
+            />
+          </Modal.Body>
+        </Modal>
+        </Col>
+      </Row>
+      <Row className="pt-5 g-4 d-flex flex-column  ">
+        <Col  className=" d-flex align-items-center justify-content-center pt-5">
+            <h3>PCB Images</h3>     
+        </Col>
+      </Row>
+      <Row className="pt-5 g-4 d-flex flex-row">
+        <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
+          <Card bg="dark" text="white" className="h-100 w-100">
+            <Card.Title className="p-3">Light Sensor PCB</Card.Title>
+            <Card.Img variant="top" src={lPCB} />
+          </Card>
+        </Col>
+        <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
+          <Card bg="dark" text="white" className="h-100 w-100">
+            <Card.Title className="p-3">Spotify MP3 Player PCB</Card.Title>
+            <Card.Img variant="top" src={sPCB} />
+            <Card.Img variant="top" src={sPCB2} />
+          </Card>
+        </Col>
       </Row>
     </Container>
   );

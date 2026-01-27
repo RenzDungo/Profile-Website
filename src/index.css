@@ -22,7 +22,7 @@ body,
 }
 
 .intro-text {
-  font-size: clamp(0.6rem, 2vw, 1rem);
+  font-size: clamp(0.3rem, 2vw, 3rem);
   text-align: left;
 }
 

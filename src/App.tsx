@@ -1,30 +1,36 @@
-import { useRef } from 'react'
-import { Stack, } from 'react-bootstrap'
+import { useState } from 'react'
 import Navigationbar from './components/Navbar'
 import Home from './Pages/Home'
 import Projectpage from './Pages/Projects'
 import ContactPage from './Pages/Contact'
 
 function App() {
-  const homeRef = useRef<HTMLDivElement>(null!)
-  const projectsRef = useRef<HTMLDivElement>(null!)
-  const contactRef = useRef<HTMLDivElement>(null!)  
-  return (
-    <Stack>
-      <Navigationbar 
-        onHome={() => homeRef.current?.scrollIntoView({ behavior: 'smooth' })}
-        onProjects={() => projectsRef.current?.scrollIntoView({ behavior: 'smooth' })}
-        onContact={() => contactRef.current?.scrollIntoView({ behavior: 'smooth' })}
-      />
+  const [activeIndex, setActiveIndex] = useState(0)
 
-      <Home innerRef={homeRef} />
-      <div style={{paddingBottom:"10rem"}}/>
-      <Projectpage innerRef={projectsRef} />
-      <ContactPage innerRef={contactRef} />
-      {/* <About innerRef={aboutRef} />
-      <Projects innerRef={projectsRef} />
-      <Contact innerRef={contactRef} /> */}
-    </Stack>
+  return (
+    <div className="pcb-app">
+      <Navigationbar
+        onHome={() => setActiveIndex(0)}
+        onProjects={() => setActiveIndex(1)}
+        onContact={() => setActiveIndex(2)}
+      />
+      <div className="pcb-viewport">
+        <div
+          className="pcb-track"
+          style={{ transform: `translateX(-${activeIndex * (100 / 3)}%)` }}
+        >
+          <div className="pcb-page">
+            <Home />
+          </div>
+          <div className="pcb-page">
+            <Projectpage />
+          </div>
+          <div className="pcb-page">
+            <ContactPage />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

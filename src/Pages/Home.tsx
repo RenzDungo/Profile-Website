@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { useRef } from "react";
 import profile from "../assets/Profile3.png";
 import js from "../assets/javascript.png";
@@ -6,8 +6,16 @@ import cpp from "../assets/Cplusplus.png";
 import python from "../assets/python.jpg";
 import asm from "../assets/asm.jpg";
 import PCBTraces from "../components/PCBTraces";
-import PCBBackground from "../components/PCBBackground";
-import { boardDecorPattern } from "../components/pcbPattern";
+import ICChip from "../components/ICChip";
+
+const LANGUAGES = [
+  { src: js, label: "JavaScript", short: "JS" },
+  { src: cpp, label: "C++", short: "C++" },
+  { src: python, label: "Python", short: "PY" },
+  { src: asm, label: "Assembly", short: "ASM" },
+];
+
+const SKILLS = ["Troubleshooting", "Designing", "Attention to Detail", "Testing"];
 
 export default function Home() {
   const boardRef = useRef<HTMLDivElement>(null!);
@@ -17,9 +25,14 @@ export default function Home() {
   const aboutRef = useRef<HTMLDivElement>(null!);
 
   return (
-    <Container fluid>
-      <div className="pcb-board" ref={boardRef}>
-        <PCBBackground pattern={boardDecorPattern} />
+    <Container fluid className="px-0">
+      <header className="pcb-titleblock">
+        <h1 className="pcb-title">Home</h1>
+        <p className="pcb-subtitle">Computer Engineer · Software Developer · Board-level tinkerer</p>
+      </header>
+
+      <div className="pcb-region" ref={boardRef}>
+        <span className="pcb-region__label">SEC A · CORE</span>
         <PCBTraces
           containerRef={boardRef}
           links={[
@@ -30,68 +43,63 @@ export default function Home() {
         />
 
         <Row className="g-4 align-items-stretch">
-          <Col md={5} ref={profileRef}>
-            <Card className="ic-chip h-100">
-              <span className="ic-chip-dot" />
-              <Card.Img src={profile} style={{ objectFit: "cover", maxHeight: "420px" }} />
-            </Card>
+          <Col xs={12} md={5} lg={4}>
+            <ICChip ref={profileRef} designator="U1" part="IMG-SENSOR" className="ic--photo">
+              <div className="ic__window">
+                <img src={profile} alt="Portrait of Renz Dungo" />
+              </div>
+            </ICChip>
           </Col>
-          <Col md={7} ref={introRef}>
-            <Card className="ic-chip h-100">
-              <span className="ic-chip-dot" />
-              <Card.Body className="d-flex flex-column justify-content-center">
-                <Card.Title style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)", color: "#f2b84b" }}>
-                  Automating Life
-                </Card.Title>
-                <Card.Text style={{ fontSize: "clamp(1rem, 1.4vw, 1.25rem)" }}>
-                  Hello I'm Renz and I'm a Computer Engineer and Software
-                  Developer and I love making my life easier through automation,
-                  whether that be through coding or creating hardware systems.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row className="pt-5">
-          <Col ref={languagesRef}>
-            <Card className="ic-chip">
-              <span className="ic-chip-dot" />
-              <Card.Body>
-                <h2 className="text-center mb-4" style={{ color: "#f2b84b" }}>Languages</h2>
-                <Row className="justify-content-center g-4">
-                  <Col xs="auto">
-                    <Image src={js} className="tech-icon" />
-                  </Col>
-                  <Col xs="auto">
-                    <Image src={cpp} className="tech-icon" />
-                  </Col>
-                  <Col xs="auto">
-                    <Image src={python} className="tech-icon" />
-                  </Col>
-                  <Col xs="auto">
-                    <Image src={asm} className="tech-icon" />
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row className="pt-5">
-          <Col ref={aboutRef}>
-            <Card className="ic-chip">
-              <span className="ic-chip-dot" />
-              <Card.Body>
-                <h2 className="text-center mb-4" style={{ color: "#f2b84b" }}>About Me</h2>
-                <p className="text-center mx-auto" style={{ maxWidth: "60%" }}>
-                  As a kid, I was always fascinated with how computers worked and the intracies with what you could do with them.
-                  This curiosity led me to
-                  pursue a degree in Computer Engineering and eventually fostered a
-                  love for tinkering and coding.
+          <Col xs={12} md={7} lg={8}>
+            <ICChip ref={introRef} designator="U2" part="MCU-CORE-2026" pkg="qfp">
+              <div className="ic__hero">
+                <h2 className="ic__title ic__title--lg">Circuits 2 Code</h2>
+                <p className="ic__text ic__text--lg">
+                  Hello, I'm Renz. I'm a Computer Engineer and Software Developer. I develop Arduino-based
+                  circuits for my hobbies, from airsoft gear to tools for playing card games, and I design
+                  websites with backend functionality and working databases.
                 </p>
-              </Card.Body>
-            </Card>
+              </div>
+            </ICChip>
+          </Col>
+        </Row>
+
+        <Row className="g-4 pt-4 align-items-stretch">
+          <Col xs={12} md={6}>
+            <ICChip ref={languagesRef} designator="U3" part="LANG-BUS-x4">
+              <h2 className="ic__title">Languages</h2>
+              <ul className="pcb-padgrid">
+                {LANGUAGES.map((lang) => (
+                  <li key={lang.label} className="pcb-padgrid__item" title={lang.label}>
+                    <span className="pcb-padgrid__pad">
+                      <img src={lang.src} alt={lang.label} className="tech-icon" />
+                    </span>
+                    <span className="pcb-padgrid__label">{lang.short}</span>
+                  </li>
+                ))}
+              </ul>
+            </ICChip>
+          </Col>
+          <Col xs={12} md={6}>
+            <ICChip ref={aboutRef} designator="U4" part="SKILL-SET">
+              <h2 className="ic__title">About Me</h2>
+              <p className="ic__text">
+                I take a circuit from idea to working board: designing it, building it, testing it, and
+                troubleshooting it until it meets quality standards. I bring attention to detail to every step and am
+                comfortable on the bench with the standard electronic test equipment.
+              </p>
+              <ul className="pcb-skills" aria-label="Skills">
+                {SKILLS.map((skill) => (
+                  <li key={skill} className="pcb-skills__item">
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+              <p className="pcb-skills__tools">
+                <span className="pcb-skills__tools-label">TEST GEAR</span>
+                Multimeter · Oscilloscope · Waveform Generator
+              </p>
+            </ICChip>
           </Col>
         </Row>
       </div>

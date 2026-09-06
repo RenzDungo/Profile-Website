@@ -1,16 +1,50 @@
+/* =====================================================================
+   PCB portfolio theme
+   The whole page is a printed circuit board: solder-mask green substrate,
+   copper traces and passive components in the background, and every card
+   is an integrated circuit sitting on top of it.
+   ===================================================================== */
+
+:root {
+  --board: #0b3a2c;
+  --board-deep: #072a1f;
+  --board-lift: #0f4a37;
+  --copper: #e2b25a;
+  --copper-bright: #ffd98a;
+  --copper-dim: rgba(226, 178, 90, 0.26);
+  --silk: rgba(238, 242, 240, 0.88);
+  --silk-dim: rgba(238, 242, 240, 0.48);
+  --silk-faint: rgba(238, 242, 240, 0.24);
+  --ic-face: #17191d;
+  --ic-face-hi: #272b31;
+  --ic-edge: #3b4047;
+  --pin-metal: #cfd4da;
+  --pin-len: 9px;
+  --led-off: #3a1010;
+  --led-on: #57ff8a;
+  --text: #e8ebe9;
+  --text-dim: #b8c0bc;
+  --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
 html,
 body,
 #root {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    background-color: #030f0b;
-    overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: var(--board-deep);
+  color: var(--text);
+  overflow: hidden;
 }
 
+/* ---------------------------------------------------------------------
+   App shell: horizontal track of three full-height boards.
+   --------------------------------------------------------------------- */
 .pcb-app {
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -32,142 +66,236 @@ body,
 
 .pcb-page {
   position: relative;
-  width: 100vw;
+  width: calc(100% / 3);
   height: 100%;
   flex-shrink: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #030f0b;
-  color: #e8e8e8;
-  padding: 2.5rem 1.5rem 4rem;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-.tech-icon {
-  width: clamp(46px, 4vw, 80px);
-  height: clamp(46px, 4vw, 80px);
-  border-radius: 50%;      /* makes it a circle */
-  object-fit: contain;     /* keeps logo proportions */
-  background-color: white;  /* subtle contrast */
-  padding: 1px;            /* spacing inside the circle */
-}
-
-.tech-icon:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-}
-
-/* A "populated module" region of the board grouping related chips. */
-.pcb-board--fill {
-  min-height: 70vh;
-}
-
-.pcb-board {
+/* ---------------------------------------------------------------------
+   Board surface
+   --------------------------------------------------------------------- */
+.pcb-surface {
   position: relative;
-  z-index: 0;
-  overflow: hidden;
-  border-radius: 12px;
+  min-height: 100%;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 26px 26px,
-    #06261c;
-  padding: 2.5rem 1.5rem 2rem;
-  box-shadow:
-    inset 0 0 50px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
+    radial-gradient(circle, rgba(255, 255, 255, 0.045) 1px, transparent 1.3px) 0 0 / 24px 24px,
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.05), transparent 55%),
+    linear-gradient(180deg, var(--board-lift) 0%, var(--board) 22%, var(--board) 80%, var(--board-deep) 100%);
 }
 
-/* A labeled chip standing in for a section heading. */
-.pcb-chip {
-  position: relative;
+/* Routed board outline just inside the page edge. */
+.pcb-surface::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(226, 178, 90, 0.22);
+  border-radius: 14px;
+  pointer-events: none;
   z-index: 1;
-  display: inline-block;
-  padding: 0.4rem 1.3rem;
-  border: 2px solid #f2b84b;
-  border-radius: 4px;
-  color: #f2b84b;
-  background: #0b3a2a;
-  letter-spacing: 0.06em;
-  box-shadow: 0 0 12px rgba(242, 184, 75, 0.45);
 }
 
-.pcb-decor {
-  z-index: -1;
+.pcb-surface__content {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+/* Plated mounting holes in the four corners. */
+.pcb-hole {
+  position: absolute;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    var(--board-deep) 0 36%,
+    #f0cc7a 38% 48%,
+    #d9a84b 50% 64%,
+    #8a6a2e 66% 72%,
+    transparent 74%
+  );
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.8);
+}
+.pcb-hole--tl { top: 14px; left: 14px; }
+.pcb-hole--tr { top: 14px; right: 14px; }
+.pcb-hole--bl { bottom: 14px; left: 14px; }
+.pcb-hole--br { bottom: 14px; right: 14px; }
+
+/* Decorative copper + components layer. */
+.pcb-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
   pointer-events: none;
 }
 
-.pcb-decor-traces path {
+.pcb-bg svg {
+  display: block;
+}
+
+.pcb-bg-traces path {
   fill: none;
-  stroke: rgba(242, 184, 75, 0.16);
+  stroke: var(--copper-dim);
   stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.pcb-decor-vias circle {
-  fill: rgba(242, 184, 75, 0.24);
+.pcb-bg-vias circle {
+  fill: rgba(226, 178, 90, 0.55);
 }
 
+.pcb-bg-vias .pcb-bg-via-hole {
+  fill: var(--board-deep);
+}
+
+.pcb-silk-ref {
+  font-family: var(--mono);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: var(--silk-faint);
+}
+
+.pcb-smd-code {
+  font-family: var(--mono);
+  font-size: 5.5px;
+  font-weight: 700;
+  fill: rgba(255, 255, 255, 0.75);
+}
+
+.pcb-footer {
+  width: fit-content;
+  margin: 3rem auto 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 3px;
+  background: rgba(7, 42, 31, 0.92);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--silk-faint);
+}
+
+/* ---------------------------------------------------------------------
+   Silkscreen typography: page titles, section regions, legends
+   --------------------------------------------------------------------- */
+.pcb-titleblock {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin: 0.25rem 0 0;
+  padding: 0.6rem 1.25rem 0.7rem 0.75rem;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(11, 58, 44, 0.96) 0%, rgba(11, 58, 44, 0.9) 75%, rgba(11, 58, 44, 0) 100%);
+}
+
+.pcb-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--silk);
+}
+
+.pcb-title::before {
+  content: "// ";
+  color: var(--copper);
+}
+
+.pcb-subtitle {
+  margin: 0.5rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--silk-dim);
+}
+
+.pcb-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pcb-region {
+  position: relative;
+  margin-top: 2.5rem;
+  padding: 2.9rem 0.85rem 1.6rem;
+  border: 1px dashed var(--silk-dim);
+  border-radius: 12px;
+}
+
+.pcb-region--fill {
+  min-height: 60vh;
+}
+
+.pcb-region__label {
+  position: absolute;
+  top: 0.65rem;
+  left: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--silk-dim);
+  padding: 0.2rem 0.5rem 0.2rem 0.4rem;
+  border-radius: 3px;
+  background: rgba(11, 58, 44, 0.94);
+}
+
+.pcb-region__label::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid var(--silk-dim);
+}
+
+.pcb-hubrow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 0.25rem;
+}
+
+/* ---------------------------------------------------------------------
+   Functional (animated) traces between hub and ICs
+   --------------------------------------------------------------------- */
 .pcb-traces {
   z-index: 0;
 }
 
-.pcb-board .card,
-.ic-chip {
-  position: relative;
-  z-index: 1;
-}
-
-/* An "IC" card: a dark package with a pin-1 dot and DIP-style leads. */
-.ic-chip {
-  background-color: #14171b !important;
-  border: 1px solid #3d4147 !important;
-  border-radius: 6px !important;
-  color: #e8e8e8;
-}
-
-.ic-chip .card-header {
-  background-color: rgba(255, 255, 255, 0.03);
-  border-bottom-color: #3d4147;
-}
-
-.ic-chip::before,
-.ic-chip::after {
-  content: "";
-  position: absolute;
-  top: 14%;
-  bottom: 14%;
-  width: 6px;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    #b7bdc4 0,
-    #b7bdc4 6px,
-    transparent 6px,
-    transparent 15px
-  );
-}
-
-.ic-chip::before {
-  left: -6px;
-}
-
-.ic-chip::after {
-  right: -6px;
-}
-
-.ic-chip-dot {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #6b7178;
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+.pcb-trace-clear {
+  fill: none;
+  stroke: var(--board);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.96;
 }
 
 .pcb-trace-path {
   fill: none;
-  stroke: #f2b84b;
-  stroke-width: 2;
+  stroke: var(--copper);
+  stroke-width: 2.2;
   stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   filter: drop-shadow(0 0 3px rgba(242, 184, 75, 0.85));
@@ -187,4 +315,776 @@ body,
 
 .pcb-trace-active .pcb-trace-pulse {
   opacity: 1;
+}
+
+/* ---------------------------------------------------------------------
+   IC package cards
+   --------------------------------------------------------------------- */
+.ic {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  --pin: var(--pin-len);
+}
+
+.ic__body {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(150deg, var(--ic-face-hi) 0%, var(--ic-face) 38%, #0e1013 100%);
+  border: 1px solid var(--ic-edge);
+  border-radius: 5px;
+  box-shadow:
+    0 12px 26px -12px rgba(0, 0, 0, 0.85),
+    0 0 0 3px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+/* Pin leads. A metallic gradient masked by a repeating stripe so each pin
+   reads as a separate lead with a gap between it and its neighbours. */
+.ic__pins {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ic__pins--left,
+.ic__pins--right {
+  top: 13%;
+  bottom: 13%;
+  width: var(--pin);
+  background: linear-gradient(to right, #7f868e, #e6eaee 48%, #8d949b);
+  -webkit-mask-image: repeating-linear-gradient(to bottom, #000 0 7px, transparent 7px 15px);
+  mask-image: repeating-linear-gradient(to bottom, #000 0 7px, transparent 7px 15px);
+}
+
+.ic__pins--left { left: calc(1px - var(--pin)); }
+.ic__pins--right { right: calc(1px - var(--pin)); }
+
+.ic__pins--top,
+.ic__pins--bottom {
+  left: 12%;
+  right: 12%;
+  height: var(--pin);
+  background: linear-gradient(to bottom, #7f868e, #e6eaee 48%, #8d949b);
+  -webkit-mask-image: repeating-linear-gradient(to right, #000 0 7px, transparent 7px 15px);
+  mask-image: repeating-linear-gradient(to right, #000 0 7px, transparent 7px 15px);
+}
+
+.ic__pins--top { top: calc(1px - var(--pin)); }
+.ic__pins--bottom { bottom: calc(1px - var(--pin)); }
+
+/* SOT: tiny package, only three leads a side. */
+.ic--sot .ic__pins--left,
+.ic--sot .ic__pins--right {
+  top: 28%;
+  bottom: 28%;
+}
+
+/* Pin-1 notch at the top edge and the pin-1 dot beside the designator. */
+.ic__notch {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 26px;
+  height: 12px;
+  transform: translateX(-50%);
+  background: #08090b;
+  border-radius: 0 0 13px 13px;
+  box-shadow:
+    inset 0 -2px 3px rgba(255, 255, 255, 0.09),
+    inset 0 2px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+
+.ic__dot {
+  position: absolute;
+  top: 11px;
+  left: 12px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #08090b;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.95),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+/* Laser-etched marking row: designator, part number, status LED. */
+.ic__marking {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2rem;
+  padding: 0.6rem 0.85rem 0.5rem 1.9rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(236, 240, 238, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ic__ref {
+  color: var(--copper);
+  flex-shrink: 0;
+}
+
+.ic__part {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(236, 240, 238, 0.5);
+}
+
+.ic__status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.ic__led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--led-off);
+  box-shadow: inset 0 0 2px #000;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.ic__status-text {
+  font-size: 0.58rem;
+  color: var(--silk-faint);
+  transition: color 0.25s;
+}
+
+.ic__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.ic__title {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--copper-bright);
+}
+
+.ic__title--lg {
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  letter-spacing: 0.04em;
+}
+
+.ic__text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.ic__text--lg {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  max-width: 60ch;
+}
+
+.ic__hero {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.25rem;
+}
+
+/* Interactive ICs: the status LED lights and the package lifts on hover. */
+.ic--interactive {
+  cursor: pointer;
+}
+
+.ic--interactive .ic__body {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.ic--interactive:hover .ic__body,
+.ic--interactive:focus-within .ic__body,
+.ic--interactive:focus-visible .ic__body {
+  transform: translateY(-3px);
+  border-color: var(--copper);
+  box-shadow:
+    0 18px 30px -12px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(226, 178, 90, 0.55),
+    0 0 24px rgba(226, 178, 90, 0.28);
+}
+
+.ic--interactive:hover .ic__led,
+.ic--interactive:focus-within .ic__led,
+.ic--interactive:focus-visible .ic__led {
+  background: var(--led-on);
+  box-shadow: 0 0 8px var(--led-on), 0 0 2px #fff;
+}
+
+.ic--interactive:hover .ic__status-text,
+.ic--interactive:focus-within .ic__status-text,
+.ic--interactive:focus-visible .ic__status-text {
+  color: var(--led-on);
+}
+
+.ic--interactive:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 5px;
+  border-radius: 6px;
+}
+
+.ic__link {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 5px;
+}
+
+.ic__link:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 5px;
+}
+
+/* Hub chip: compact QFP that the traces fan out from. */
+.ic--hub {
+  height: auto;
+  width: auto;
+  min-width: min(240px, 100%);
+}
+
+.ic--hub .ic__content {
+  align-items: center;
+  padding: 0.7rem 1.4rem 1rem;
+}
+
+.ic--hub .ic__title {
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Photo chip: an EPROM-style quartz window with the image behind glass. */
+.ic--photo .ic__content {
+  padding: 0.85rem;
+}
+
+.ic__window {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #2b2f35;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  background: #000;
+}
+
+.ic__window img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 460px;
+  object-fit: cover;
+}
+
+.ic__window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 30%, transparent 55%);
+  pointer-events: none;
+}
+
+.ic--photo .ic__title + .ic__window {
+  flex: 0 0 auto;
+}
+
+/* Port chips (Contact page): icon + label, small package. */
+.ic--port .ic__content {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  padding: 1rem 0.6rem 1.1rem;
+}
+
+.ic__port-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+  padding: 4px;
+}
+
+.ic__port-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--silk);
+}
+
+/* Language pads: each tech logo sits on a copper pad with a silkscreen label. */
+.pcb-padgrid {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 1rem 0.5rem;
+  justify-items: center;
+}
+
+.pcb-padgrid__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.pcb-padgrid__pad {
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f6d98a 0 52%, #d9a84b 54% 78%, #8a6a2e 80% 88%, transparent 90%);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.pcb-padgrid__item:hover .pcb-padgrid__pad {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 10px rgba(226, 178, 90, 0.5));
+}
+
+.tech-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: contain;
+  background-color: #fff;
+  padding: 2px;
+}
+
+.pcb-padgrid__label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--silk-dim);
+}
+
+/* Skill tags: small silkscreen-style labels inside the About Me chip. */
+.pcb-skills {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pcb-skills__item {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(226, 178, 90, 0.55);
+  border-radius: 3px;
+  background: rgba(226, 178, 90, 0.08);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--copper-bright);
+}
+
+.pcb-skills__tools {
+  margin: 0.35rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.pcb-skills__tools-label {
+  display: inline-block;
+  margin-right: 0.6rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--silk-dim);
+}
+
+/* ---------------------------------------------------------------------
+   Navbar: board title block + pin-header navigation
+   --------------------------------------------------------------------- */
+.pcb-nav {
+  position: relative;
+  z-index: 10;
+  padding: 0.55rem 0;
+  background: linear-gradient(180deg, #08251b, #061a13);
+  border-bottom: 1px solid rgba(226, 178, 90, 0.35);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.pcb-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-right: 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  color: var(--silk) !important;
+  text-decoration: none;
+}
+
+.pcb-nav__rev {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--silk-faint);
+  border-radius: 3px;
+  color: var(--silk-dim);
+}
+
+.pcb-led {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pcb-led--pwr,
+.pcb-led--ok,
+.pcb-led--hint {
+  background: var(--led-on);
+  box-shadow: 0 0 8px var(--led-on), 0 0 2px #fff;
+}
+
+.pcb-led--pwr {
+  animation: pcb-blink 2.6s infinite;
+}
+
+@keyframes pcb-blink {
+  0%, 88%, 100% { opacity: 1; }
+  93% { opacity: 0.3; }
+}
+
+.pcb-nav__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--silk-faint);
+  border-radius: 3px;
+  color: var(--silk);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  box-shadow: none !important;
+}
+
+.pcb-nav__toggle-pins {
+  width: 18px;
+  height: 13px;
+  background: repeating-linear-gradient(to bottom, var(--pin-metal) 0 2px, transparent 2px 5.5px);
+}
+
+.pcb-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pcb-header__ref {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--silk-dim);
+}
+
+.pcb-header__pins {
+  display: flex;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem;
+  border: 1px solid var(--silk-faint);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.pcb-header__pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  padding: 0.4rem 0.85rem 0.45rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--silk-dim);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.pcb-header__pin {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+  border: 1.5px solid var(--copper);
+  font-size: 0.5rem;
+  line-height: 10px;
+  text-align: center;
+  color: var(--copper);
+  transition: inherit;
+}
+
+.pcb-header__pad:hover,
+.pcb-header__pad:focus-visible {
+  color: var(--silk);
+  border-color: var(--silk-faint);
+  outline: none;
+}
+
+.pcb-header__pad.is-active {
+  color: #1a1206;
+  background: var(--copper);
+  border-color: var(--copper-bright);
+  box-shadow: 0 0 14px rgba(226, 178, 90, 0.5);
+}
+
+.pcb-header__pad.is-active .pcb-header__pin {
+  background: #1a1206;
+  border-color: #1a1206;
+  color: var(--copper);
+}
+
+/* ---------------------------------------------------------------------
+   Modal + toast
+   --------------------------------------------------------------------- */
+.pcb-modal .modal-content {
+  background: #0f1114;
+  border: 1px solid var(--ic-edge);
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.7);
+  color: var(--text);
+}
+
+.pcb-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+}
+
+.ic__marking--modal {
+  border: 0;
+  padding: 0.25rem 0;
+  min-height: 0;
+}
+
+.pcb-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 1100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--led-on);
+  border-radius: 4px;
+  background: #0f1114;
+  color: var(--led-on);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  box-shadow: 0 0 18px rgba(87, 255, 138, 0.3);
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.pcb-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .ic__title--lg {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pcb-surface__content {
+    padding: 1.1rem 0.9rem 2.5rem;
+  }
+
+  .pcb-region {
+    padding: 2.6rem 0.6rem 1.25rem;
+  }
+
+  .ic__window img {
+    max-height: 340px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  :root {
+    --pin-len: 6px;
+  }
+
+  .pcb-surface__content {
+    padding: 1rem 0.75rem 2.25rem;
+  }
+
+  .pcb-region {
+    margin-top: 2rem;
+    padding: 2.5rem 0.55rem 1rem;
+    border-radius: 10px;
+  }
+
+  .pcb-region__label {
+    left: 0.75rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+  }
+
+  .pcb-hole {
+    width: 18px;
+    height: 18px;
+  }
+  .pcb-hole--tl, .pcb-hole--tr { top: 10px; }
+  .pcb-hole--bl, .pcb-hole--br { bottom: 10px; }
+  .pcb-hole--tl, .pcb-hole--bl { left: 10px; }
+  .pcb-hole--tr, .pcb-hole--br { right: 10px; }
+
+  .ic__marking {
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem 0.45rem 1.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .ic__status-text {
+    display: none;
+  }
+
+  .ic__content {
+    padding: 0.85rem 0.9rem 1rem;
+  }
+
+  .ic__text {
+    font-size: 0.9rem;
+  }
+
+  .ic--port .ic__content {
+    padding: 0.8rem 0.4rem 0.9rem;
+  }
+
+  .ic__port-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .ic__port-label {
+    font-size: 0.64rem;
+  }
+
+  .ic--hub {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .pcb-padgrid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  }
+
+  .pcb-padgrid__pad {
+    width: 66px;
+    height: 66px;
+  }
+
+  .tech-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  /* Collapsed navbar: the pin header becomes a full-width strip. */
+  .pcb-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .pcb-header__pins {
+    justify-content: space-between;
+  }
+
+  .pcb-header__pins li {
+    flex: 1 1 0;
+  }
+
+  .pcb-header__pad {
+    padding: 0.45rem 0.4rem 0.5rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+
+  .pcb-nav__brand {
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+  }
+
+  .pcb-footer {
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcb-track,
+  .ic--interactive .ic__body,
+  .pcb-trace-path,
+  .pcb-trace-pulse,
+  .pcb-toast {
+    transition: none;
+  }
+
+  .pcb-led--pwr {
+    animation: none;
+  }
 }

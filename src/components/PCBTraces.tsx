@@ -53,6 +53,10 @@ function buildHorizontalPath(x1: number, y1: number, x2: number, y2: number) {
   ].join(" ");
 }
 
+// Functional (animated) copper traces that connect a hub chip to the ICs it
+// drives. Each trace is drawn twice: first as a wide board-coloured stroke
+// that acts as a solder-mask clearance over the decorative background
+// copper, then as the glowing signal trace itself.
 export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
   const [paths, setPaths] = useState<TracePath[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -126,7 +130,7 @@ export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
           io.disconnect();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     io.observe(container);
     return () => io.disconnect();
@@ -138,7 +142,13 @@ export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
       width={size.width}
       height={size.height}
       style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", overflow: "visible" }}
+      aria-hidden="true"
     >
+      <g className="pcb-traces-clearance">
+        {paths.map((p) => (
+          <path key={p.id} d={p.d} className="pcb-trace-clear" />
+        ))}
+      </g>
       {paths.map((p) => (
         <g key={p.id} className={active ? "pcb-trace pcb-trace-active" : "pcb-trace"}>
           <path d={p.d} className="pcb-trace-path" pathLength={100} />

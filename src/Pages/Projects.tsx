@@ -1,256 +1,235 @@
-import { Container, Row, Col, Card, Modal} from "react-bootstrap";
+import { Container, Row, Col, Modal } from "react-bootstrap";
 import demoVideo from "../assets/videodemonstration.mp4";
 import sPCB from "../assets/SPCB.png";
 import sPCB2 from "../assets/SPCB2.png";
 import lPCB from "../assets/LPCB.png";
 import { useRef, useState } from "react";
 import PCBTraces from "../components/PCBTraces";
-import PCBBackground from "../components/PCBBackground";
-import { boardDecorPattern } from "../components/pcbPattern";
+import ICChip from "../components/ICChip";
 
 export default function Projectpage() {
   const [show, setShow] = useState(false);
 
   const softwareBoardRef = useRef<HTMLDivElement>(null!);
-  const softwareChipRef = useRef<HTMLDivElement>(null!);
-  const mtgCardRef = useRef<HTMLDivElement>(null!);
-  const jobTrackerCardRef = useRef<HTMLDivElement>(null!);
-  const openCvCardRef = useRef<HTMLDivElement>(null!);
-  const seleniumCardRef = useRef<HTMLDivElement>(null!);
+  const softwareHubRef = useRef<HTMLDivElement>(null!);
+  const mtgRef = useRef<HTMLDivElement>(null!);
+  const jobsRef = useRef<HTMLDivElement>(null!);
+  const openCvRef = useRef<HTMLDivElement>(null!);
+  const seleniumRef = useRef<HTMLDivElement>(null!);
 
   const hardwareBoardRef = useRef<HTMLDivElement>(null!);
-  const hardwareChipRef = useRef<HTMLDivElement>(null!);
-  const glassesCardRef = useRef<HTMLDivElement>(null!);
-  const feederCardRef = useRef<HTMLDivElement>(null!);
-  const radioCardRef = useRef<HTMLDivElement>(null!);
-  const lightCardRef = useRef<HTMLDivElement>(null!);
-  const spotifyCardRef = useRef<HTMLDivElement>(null!);
+  const hardwareHubRef = useRef<HTMLDivElement>(null!);
+  const glassesRef = useRef<HTMLDivElement>(null!);
+  const feederRef = useRef<HTMLDivElement>(null!);
+  const radioRef = useRef<HTMLDivElement>(null!);
+  const lightRef = useRef<HTMLDivElement>(null!);
+  const spotifyRef = useRef<HTMLDivElement>(null!);
 
   const imagesBoardRef = useRef<HTMLDivElement>(null!);
-  const imagesChipRef = useRef<HTMLDivElement>(null!);
-  const lightPcbImgRef = useRef<HTMLDivElement>(null!);
-  const spotifyPcbImgRef = useRef<HTMLDivElement>(null!);
+  const imagesHubRef = useRef<HTMLDivElement>(null!);
+  const lightPcbRef = useRef<HTMLDivElement>(null!);
+  const spotifyPcbRef = useRef<HTMLDivElement>(null!);
 
   return (
-    <Container fluid style={{paddingBottom:"20%"}}>
-      <Row>
-        <Col className=" d-flex align-items-center justify-content-center">
-          <h1>Projects</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col  className=" d-flex align-items-center justify-content-center pt-5">
-            <h5>If the card is hoverable, Click it for more information!</h5>
-        </Col>
-      </Row>
+    <Container fluid className="px-0">
+      <header className="pcb-titleblock">
+        <h1 className="pcb-title">Projects</h1>
+        <p className="pcb-subtitle">
+          <span className="pcb-legend">
+            <span className="pcb-led pcb-led--hint" aria-hidden="true" /> A lit LED means the chip opens a link or demo.
+          </span>
+        </p>
+      </header>
 
-      <div className="pcb-board mt-5" ref={softwareBoardRef}>
-        <PCBBackground pattern={boardDecorPattern} />
+      {/* ---------------------------------------------------------------- */}
+      <div className="pcb-region" ref={softwareBoardRef}>
+        <span className="pcb-region__label">SEC A · SOFTWARE</span>
         <PCBTraces
           containerRef={softwareBoardRef}
           links={[
-            { from: softwareChipRef, to: mtgCardRef },
-            { from: softwareChipRef, to: jobTrackerCardRef },
-            { from: softwareChipRef, to: openCvCardRef },
-            { from: softwareChipRef, to: seleniumCardRef },
+            { from: softwareHubRef, to: mtgRef },
+            { from: softwareHubRef, to: jobsRef },
+            { from: softwareHubRef, to: openCvRef },
+            { from: softwareHubRef, to: seleniumRef },
           ]}
         />
-        <Row>
-          <Col className=" d-flex align-items-center justify-content-center">
-            <h3 className="pcb-chip" ref={softwareChipRef}>Software</h3>
-          </Col>
-        </Row>
+        <div className="pcb-hubrow">
+          <ICChip ref={softwareHubRef} designator="U10" part="SW-CTRL" pkg="qfp" className="ic--hub">
+            <h2 className="ic__title">Software</h2>
+          </ICChip>
+        </div>
 
-        <Row className="pt-5 g-4">
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={mtgCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <a href="https://mtg.balloonhubgaming.com" target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", color:"white"}} >
-              <Card.Header>
-                <Card.Title>Magic the Gathering Assistant</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text>Magic the Gathering Web Application coded in Typescript with a Vite React framework for the frontend. Uses Websocket API in order
-                  to fetch data from the Magic the Gathering API. The application is designed to assist users in assisting with real time life and card tracking. Also included a feature to see stats of the current lobby.
-                  </Card.Text>
-              </Card.Body>
-              </a>
-            </Card>
+        <Row className="g-4 pt-5 align-items-stretch">
+          <Col xs={12} sm={6} lg={3}>
+            <ICChip
+              ref={mtgRef}
+              designator="U11"
+              part="MTG-ASSIST"
+              href="https://mtg.balloonhubgaming.com"
+              ariaLabel="Open the Magic the Gathering Assistant"
+            >
+              <h3 className="ic__title">Magic the Gathering Assistant</h3>
+              <p className="ic__text">
+                Magic the Gathering web application coded in TypeScript with a Vite React frontend. Uses a
+                WebSocket API to fetch data from the Magic the Gathering API. Designed to assist users with
+                real-time life and card tracking, and includes stats for the current lobby.
+              </p>
+            </ICChip>
           </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={jobTrackerCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <a href="https://jobs.balloonhubgaming.com" target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", color:"white"}}>
-              <Card.Header>
-                <Card.Title>Job Application Tracker</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text>
-                      A Web Application coded in Typescript and a Vite React framework for the frontend. The application is designed to assist users in tracking their job applications.
-                      It includes an automatic fill for Applications by providing a link and job Description text to a server which allows it to use OpenAI to parse through the text and fill out the application for the user.
-                  </Card.Text>
-              </Card.Body>
-              </a>
-            </Card>
+          <Col xs={12} sm={6} lg={3}>
+            <ICChip
+              ref={jobsRef}
+              designator="U12"
+              part="JOB-TRACK"
+              href="https://jobs.balloonhubgaming.com"
+              ariaLabel="Open the Job Application Tracker"
+            >
+              <h3 className="ic__title">Job Application Tracker</h3>
+              <p className="ic__text">
+                A web application coded in TypeScript with a Vite React frontend that helps users track
+                their job applications. Includes an automatic fill: provide a link and job description and a
+                server uses OpenAI to parse the text and fill out the application for you.
+              </p>
+            </ICChip>
           </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={openCvCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                <Card.Title>OpenCV Card Detection</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text>
-                      A Python script that uses OpenCV to detect cards through an image and identify them using scryfall's API by comparing them to a database of cards.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
+          <Col xs={12} sm={6} lg={3}>
+            <ICChip ref={openCvRef} designator="U13" part="OCV-CARD">
+              <h3 className="ic__title">OpenCV Card Detection</h3>
+              <p className="ic__text">
+                A Python script that uses OpenCV to detect cards in an image and identify them through
+                Scryfall's API by comparing them against a database of cards.
+              </p>
+            </ICChip>
           </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={seleniumCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>Selenium Scraper</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text> Created a python automated script, that scrapes html elements concerning element tags which usually indicate an out of stock product. I use a discord webhook to push updates about certain products
-                  that I am interested in.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
+          <Col xs={12} sm={6} lg={3}>
+            <ICChip ref={seleniumRef} designator="U14" part="SEL-SCRAPE">
+              <h3 className="ic__title">Selenium Scraper</h3>
+              <p className="ic__text">
+                An automated Python script that scrapes HTML elements whose tags usually indicate an
+                out-of-stock product. A Discord webhook pushes updates about products I'm interested in.
+              </p>
+            </ICChip>
           </Col>
         </Row>
       </div>
 
-      <div className="pcb-board mt-5" ref={hardwareBoardRef}>
-        <PCBBackground pattern={boardDecorPattern} />
+      {/* ---------------------------------------------------------------- */}
+      <div className="pcb-region" ref={hardwareBoardRef}>
+        <span className="pcb-region__label">SEC B · HARDWARE</span>
         <PCBTraces
           containerRef={hardwareBoardRef}
           links={[
-            { from: hardwareChipRef, to: glassesCardRef },
-            { from: hardwareChipRef, to: feederCardRef },
-            { from: hardwareChipRef, to: radioCardRef },
-            { from: hardwareChipRef, to: lightCardRef },
-            { from: hardwareChipRef, to: spotifyCardRef },
+            { from: hardwareHubRef, to: glassesRef },
+            { from: hardwareHubRef, to: feederRef },
+            { from: hardwareHubRef, to: radioRef },
+            { from: hardwareHubRef, to: lightRef },
+            { from: hardwareHubRef, to: spotifyRef },
           ]}
         />
-        <Row>
-          <Col  className=" d-flex align-items-center justify-content-center">
-              <h3 className="pcb-chip" ref={hardwareChipRef}>Hardware</h3>
+        <div className="pcb-hubrow">
+          <ICChip ref={hardwareHubRef} designator="U20" part="HW-CTRL" pkg="qfp" className="ic--hub">
+            <h2 className="ic__title">Hardware</h2>
+          </ICChip>
+        </div>
+
+        <Row className="g-4 pt-5 align-items-stretch justify-content-center">
+          <Col xs={12} sm={6} lg={4}>
+            <ICChip ref={glassesRef} designator="U21" part="ARD-GLASS">
+              <h3 className="ic__title">Arduino Glasses</h3>
+              <p className="ic__text">
+                Glasses built with Arduino and Bluetooth that connect to Bluetooth barcode scanners. The
+                scanners send information to a database and the glasses display it. A second mode handled
+                food calorie tracking.
+              </p>
+            </ICChip>
           </Col>
-        </Row>
-        <Row className="pt-5 g-4">
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={glassesCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>Arduino Glasses</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text> Glasses built with arduino and bluetooth, that could connect to bluetooth
-                          barcode scanners. The barcode scanners would send information to a databse
-                          and the glasses would be able to display it. There was also a second function for food calorie tracking.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
+          <Col xs={12} sm={6} lg={4}>
+            <ICChip ref={feederRef} designator="U22" part="DOG-FEED">
+              <h3 className="ic__title">Automatic Dog Feeder</h3>
+              <p className="ic__text">
+                Automated dog feeder controlled by an Arduino Nano. A simple system that uses a servo motor
+                and gears to rotate a food dispenser.
+              </p>
+            </ICChip>
           </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={feederCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>Automatic Dog Feeder</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text> Automated Dog feeder controlled by an arduino nano.
-                          Simple system that uses a servo motor to rotate a food dispenser using gears.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
+          <Col xs={12} sm={6} lg={4}>
+            <ICChip ref={radioRef} designator="U23" part="AM-FM-RX">
+              <h3 className="ic__title">AM/FM Radio</h3>
+              <p className="ic__text">
+                Assembled an AM/FM radio from discrete electrical components, soldering each onto a PCB.
+                Used oscilloscopes, signal generators and spectrum analyzers for troubleshooting and testing.
+              </p>
+            </ICChip>
           </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={radioCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>AM/FM Radio</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text>Assembled AM/FM radio using electrical components. Soldered individual components
-                          onto a PCB. Used electrical testing equipment such as Oscilloscope, signal generators,
-                          and spectrum analyzers for troubleshooting and testing.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
+          <Col xs={12} sm={6} lg={4}>
+            <ICChip ref={lightRef} designator="U24" part="LIGHT-DET">
+              <h3 className="ic__title">Automatic Light Detection</h3>
+              <p className="ic__text">
+                Designed a PCB for sensors and an Arduino Nano. Motion and light sensors check for occupancy
+                or activity and trigger a relay that switches a lamp.
+              </p>
+            </ICChip>
           </Col>
-        </Row>
-        <Row className="pt-5 g-4">
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={lightCardRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>Automatic Light Detection</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                  <Card.Text>
-                      Designed PCB for sensors and Arduino nano.
-                      Sensors trigger a relay which triggers a lamp.
-                      Sensors used motion and light to check for occupancy or activity to turn on.
-                  </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={spotifyCardRef} className="ic-chip h-100 w-100" onClick={() => setShow(true)} style={{ cursor: "pointer" }}>
-              <span className="ic-chip-dot" />
-              <Card.Header>
-                  <Card.Title>Spotify MP3 Player</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <Card.Text>Designed a PCB that used an ESP32 microcontroller to connect to Spotify's API to control music playback. Created my own server to handle Spotify Refresh Tokens while ESP32 accesses this server for current song list and changing songs.</Card.Text>
-              </Card.Body>
-            </Card>
-            <Modal show={show} onHide={() => setShow(false)} size="lg" centered>
-              <Modal.Body className="p-0">
-                <video
-                  src={demoVideo}
-                  controls
-                  autoPlay
-                  style={{ width: "100%" }}
-                />
-              </Modal.Body>
-            </Modal>
+          <Col xs={12} sm={6} lg={4}>
+            <ICChip ref={spotifyRef} designator="U25" part="ESP32-MP3" onClick={() => setShow(true)} ariaLabel="Play the Spotify MP3 player demo">
+              <h3 className="ic__title">Spotify MP3 Player</h3>
+              <p className="ic__text">
+                Designed a PCB around an ESP32 that talks to Spotify's API to control playback. Built my own
+                server to handle Spotify refresh tokens while the ESP32 pulls the current song list and
+                changes tracks.
+              </p>
+            </ICChip>
           </Col>
         </Row>
       </div>
 
-      <div className="pcb-board mt-5" ref={imagesBoardRef}>
-        <PCBBackground pattern={boardDecorPattern} />
+      <Modal show={show} onHide={() => setShow(false)} size="lg" centered dialogClassName="pcb-modal">
+        <Modal.Header closeButton closeVariant="white">
+          <Modal.Title className="ic__marking ic__marking--modal">
+            <span className="ic__ref">U25</span>
+            <span className="ic__part">ESP32-MP3 · DEMO</span>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <video src={demoVideo} controls autoPlay playsInline style={{ width: "100%", display: "block" }} />
+        </Modal.Body>
+      </Modal>
+
+      {/* ---------------------------------------------------------------- */}
+      <div className="pcb-region" ref={imagesBoardRef}>
+        <span className="pcb-region__label">SEC C · FABRICATED BOARDS</span>
         <PCBTraces
           containerRef={imagesBoardRef}
           links={[
-            { from: imagesChipRef, to: lightPcbImgRef },
-            { from: imagesChipRef, to: spotifyPcbImgRef },
+            { from: imagesHubRef, to: lightPcbRef },
+            { from: imagesHubRef, to: spotifyPcbRef },
           ]}
         />
-        <Row>
-          <Col  className=" d-flex align-items-center justify-content-center">
-              <h3 className="pcb-chip" ref={imagesChipRef}>PCB Images</h3>
+        <div className="pcb-hubrow">
+          <ICChip ref={imagesHubRef} designator="U30" part="IMG-BUS" pkg="qfp" className="ic--hub">
+            <h2 className="ic__title">PCB Images</h2>
+          </ICChip>
+        </div>
+
+        <Row className="g-4 pt-5 align-items-stretch justify-content-center">
+          <Col xs={12} md={6} lg={5}>
+            <ICChip ref={lightPcbRef} designator="U31" part="LIGHT-DET-PCB" className="ic--photo">
+              <h3 className="ic__title">Light Sensor PCB</h3>
+              <div className="ic__window">
+                <img src={lPCB} alt="Light sensor PCB layout" />
+              </div>
+            </ICChip>
           </Col>
-        </Row>
-        <Row className="pt-5 g-4">
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={lightPcbImgRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Title className="p-3">Light Sensor PCB</Card.Title>
-              <Card.Img variant="top" src={lPCB} />
-            </Card>
-          </Col>
-          <Col md={4} className=" d-flex align-items-center justify-content-center pt-5">
-            <Card ref={spotifyPcbImgRef} className="ic-chip h-100 w-100">
-              <span className="ic-chip-dot" />
-              <Card.Title className="p-3">Spotify MP3 Player PCB</Card.Title>
-              <Card.Img variant="top" src={sPCB} />
-              <Card.Img variant="top" src={sPCB2} />
-            </Card>
+          <Col xs={12} md={6} lg={5}>
+            <ICChip ref={spotifyPcbRef} designator="U32" part="ESP32-MP3-PCB" className="ic--photo">
+              <h3 className="ic__title">Spotify MP3 Player PCB</h3>
+              <div className="ic__window">
+                <img src={sPCB} alt="Spotify MP3 player PCB, top" />
+              </div>
+              <div className="ic__window">
+                <img src={sPCB2} alt="Spotify MP3 player PCB, bottom" />
+              </div>
+            </ICChip>
           </Col>
         </Row>
       </div>

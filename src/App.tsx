@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import Navigationbar from "./components/Navbar";
 import BoardPage from "./components/BoardPage";
 import Home from "./Pages/Home";
@@ -17,6 +17,16 @@ function indexFromHash() {
 function App() {
   const [activeIndex, setActiveIndex] = useState(indexFromHash);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Only the board being looked at is rendered in the first pass, so its
+  // content (and the LCP portrait) paints as early as possible. The two
+  // off-screen boards mount right after, in a low-priority transition that
+  // yields to input instead of one long blocking task. They sit outside the
+  // viewport, so nothing visible changes.
+  const [mountAll, setMountAll] = useState(false);
+  useEffect(() => {
+    startTransition(() => setMountAll(true));
+  }, []);
 
   const go = useCallback((index: number) => {
     setActiveIndex(Math.min(PAGE_COUNT - 1, Math.max(0, index)));
@@ -86,7 +96,7 @@ function App() {
               // Keep off-screen boards out of the tab order.
               inert={activeIndex !== i}
             >
-              <BoardPage seed={page.seed}>{page.node}</BoardPage>
+              {(mountAll || i === activeIndex) && <BoardPage seed={page.seed}>{page.node}</BoardPage>}
             </section>
           ))}
         </div>

@@ -1,13 +1,30 @@
 import { Container, Row, Col, Modal } from "react-bootstrap";
 import demoVideo from "../assets/videodemonstration.mp4";
-import sPCB from "../assets/SPCB.png";
-import sPCB2 from "../assets/SPCB2.png";
-import lPCB from "../assets/LPCB.png";
-import { useRef, useState } from "react";
+import { PCB_PHOTO_SIZES, lightPcbImage, spotifyPcbBottomImage, spotifyPcbTopImage } from "../assets/images";
+import type { ImageSet } from "../assets/images";
+import { memo, useRef, useState } from "react";
 import PCBTraces from "../components/PCBTraces";
 import ICChip from "../components/ICChip";
 
-export default function Projectpage() {
+// Board photos sit at the bottom of a board that is usually off-screen, so
+// they load lazily and never compete with the first board for bandwidth.
+function PcbPhoto({ image, alt }: { image: ImageSet; alt: string }) {
+  return (
+    <img
+      src={image.src}
+      srcSet={image.srcSet}
+      sizes={PCB_PHOTO_SIZES}
+      width={image.width}
+      height={image.height}
+      style={{ aspectRatio: image.aspectRatio }}
+      loading="lazy"
+      decoding="async"
+      alt={alt}
+    />
+  );
+}
+
+function Projectpage() {
   const [show, setShow] = useState(false);
 
   const softwareBoardRef = useRef<HTMLDivElement>(null!);
@@ -216,7 +233,7 @@ export default function Projectpage() {
             <ICChip ref={lightPcbRef} designator="U31" part="LIGHT-DET-PCB" className="ic--photo">
               <h3 className="ic__title">Light Sensor PCB</h3>
               <div className="ic__window">
-                <img src={lPCB} alt="Light sensor PCB layout" />
+                <PcbPhoto image={lightPcbImage} alt="Light sensor PCB layout" />
               </div>
             </ICChip>
           </Col>
@@ -224,10 +241,10 @@ export default function Projectpage() {
             <ICChip ref={spotifyPcbRef} designator="U32" part="ESP32-MP3-PCB" className="ic--photo">
               <h3 className="ic__title">Spotify MP3 Player PCB</h3>
               <div className="ic__window">
-                <img src={sPCB} alt="Spotify MP3 player PCB, top" />
+                <PcbPhoto image={spotifyPcbTopImage} alt="Spotify MP3 player PCB, top" />
               </div>
               <div className="ic__window">
-                <img src={sPCB2} alt="Spotify MP3 player PCB, bottom" />
+                <PcbPhoto image={spotifyPcbBottomImage} alt="Spotify MP3 player PCB, bottom" />
               </div>
             </ICChip>
           </Col>
@@ -236,3 +253,6 @@ export default function Projectpage() {
     </Container>
   );
 }
+
+// Memoised so App re-rendering on a board change does not re-render the page.
+export default memo(Projectpage);

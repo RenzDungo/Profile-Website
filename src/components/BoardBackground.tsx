@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { generateCircuitPattern } from "./pcbPattern";
 import { AxialResistor, Capacitor, PartDefs, SmdResistor } from "./parts";
 
@@ -17,7 +17,7 @@ const QUANT_H = 240;
 // traces, vias, and populated passive components (axial resistors, SMD
 // resistors and capacitors) with silkscreen designators. Sits behind every
 // IC card, so it only shows through in the gaps between them.
-export default function BoardBackground({ surfaceRef, seed }: BoardBackgroundProps) {
+function BoardBackground({ surfaceRef, seed }: BoardBackgroundProps) {
   const [size, setSize] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
@@ -77,3 +77,7 @@ export default function BoardBackground({ surfaceRef, seed }: BoardBackgroundPro
     </div>
   );
 }
+
+// The board only depends on its size and seed, so a page re-render (a modal
+// opening, a nav click) must not rebuild the hundreds of SVG nodes below.
+export default memo(BoardBackground);

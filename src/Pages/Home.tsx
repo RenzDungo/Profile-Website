@@ -1,10 +1,10 @@
 import { Container, Row, Col } from "react-bootstrap";
-import { useRef } from "react";
-import profile from "../assets/Profile3.png";
-import js from "../assets/javascript.png";
-import cpp from "../assets/Cplusplus.png";
+import { memo, useRef } from "react";
+import { PORTRAIT_SIZES, profileImage } from "../assets/images";
+import js from "../assets/javascript-160.png";
+import cpp from "../assets/Cplusplus-160.png";
 import python from "../assets/python.jpg";
-import asm from "../assets/asm.jpg";
+import asm from "../assets/asm-160.jpg";
 import PCBTraces from "../components/PCBTraces";
 import ICChip from "../components/ICChip";
 
@@ -17,7 +17,7 @@ const LANGUAGES = [
 
 const SKILLS = ["Troubleshooting", "Designing", "Attention to Detail", "Testing"];
 
-export default function Home() {
+function Home() {
   const boardRef = useRef<HTMLDivElement>(null!);
   const profileRef = useRef<HTMLDivElement>(null!);
   const introRef = useRef<HTMLDivElement>(null!);
@@ -46,7 +46,16 @@ export default function Home() {
           <Col xs={12} md={5} lg={4}>
             <ICChip ref={profileRef} designator="U1" part="IMG-SENSOR" className="ic--photo">
               <div className="ic__window">
-                <img src={profile} alt="Portrait of Renz Dungo" />
+                <img
+                  src={profileImage.src}
+                  srcSet={profileImage.srcSet}
+                  sizes={PORTRAIT_SIZES}
+                  width={profileImage.width}
+                  height={profileImage.height}
+                  style={{ aspectRatio: profileImage.aspectRatio }}
+                  fetchPriority="high"
+                  alt="Portrait of Renz Dungo"
+                />
               </div>
             </ICChip>
           </Col>
@@ -72,7 +81,7 @@ export default function Home() {
                 {LANGUAGES.map((lang) => (
                   <li key={lang.label} className="pcb-padgrid__item" title={lang.label}>
                     <span className="pcb-padgrid__pad">
-                      <img src={lang.src} alt={lang.label} className="tech-icon" />
+                      <img src={lang.src} alt={lang.label} className="tech-icon" width={54} height={54} />
                     </span>
                     <span className="pcb-padgrid__label">{lang.short}</span>
                   </li>
@@ -106,3 +115,6 @@ export default function Home() {
     </Container>
   );
 }
+
+// Memoised so App re-rendering on a board change does not re-render the page.
+export default memo(Home);

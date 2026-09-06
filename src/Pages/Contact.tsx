@@ -1,9 +1,9 @@
 import { Row, Container, Col } from "react-bootstrap";
-import ghimg from "../assets/GithubMark.png";
-import liimg from "../assets/Linkedin.png";
-import gmimg from "../assets/Gmail.png";
-import resumeimg from "../assets/resume.png";
-import { useRef, useState } from "react";
+import ghimg from "../assets/GithubMark-176.png";
+import liimg from "../assets/Linkedin-176.png";
+import gmimg from "../assets/Gmail-176.png";
+import resumeimg from "../assets/resume-176.png";
+import { memo, useRef, useState } from "react";
 import PCBTraces from "../components/PCBTraces";
 import ICChip from "../components/ICChip";
 
@@ -26,7 +26,7 @@ function copyToClipboard(text: string) {
   document.body.removeChild(textarea);
 }
 
-export default function ContactPage() {
+function ContactPage() {
   const [copied, setCopied] = useState(false);
 
   const boardRef = useRef<HTMLDivElement>(null!);
@@ -79,7 +79,7 @@ export default function ContactPage() {
               ariaLabel="Open my GitHub profile"
               className="ic--port"
             >
-              <img src={ghimg} alt="" className="ic__port-icon" />
+              <img src={ghimg} alt="" className="ic__port-icon" width={58} height={58} />
               <span className="ic__port-label">GitHub</span>
             </ICChip>
           </Col>
@@ -93,7 +93,7 @@ export default function ContactPage() {
               ariaLabel="Open my LinkedIn profile"
               className="ic--port"
             >
-              <img src={liimg} alt="" className="ic__port-icon" />
+              <img src={liimg} alt="" className="ic__port-icon" width={58} height={58} />
               <span className="ic__port-label">LinkedIn</span>
             </ICChip>
           </Col>
@@ -107,7 +107,7 @@ export default function ContactPage() {
               ariaLabel="Copy my email address"
               className="ic--port"
             >
-              <img src={gmimg} alt="" className="ic__port-icon" />
+              <img src={gmimg} alt="" className="ic__port-icon" width={58} height={58} />
               <span className="ic__port-label">{copied ? "Copied!" : "Email"}</span>
             </ICChip>
           </Col>
@@ -121,7 +121,7 @@ export default function ContactPage() {
               ariaLabel="Open my hardware resume"
               className="ic--port"
             >
-              <img src={resumeimg} alt="" className="ic__port-icon" />
+              <img src={resumeimg} alt="" className="ic__port-icon" width={58} height={58} />
               <span className="ic__port-label">Hardware Resume</span>
             </ICChip>
           </Col>
@@ -135,7 +135,7 @@ export default function ContactPage() {
               ariaLabel="Open my software resume"
               className="ic--port"
             >
-              <img src={resumeimg} alt="" className="ic__port-icon" />
+              <img src={resumeimg} alt="" className="ic__port-icon" width={58} height={58} />
               <span className="ic__port-label">Software Resume</span>
             </ICChip>
           </Col>
@@ -149,3 +149,6 @@ export default function ContactPage() {
     </Container>
   );
 }
+
+// Memoised so App re-rendering on a board change does not re-render the page.
+export default memo(ContactPage);

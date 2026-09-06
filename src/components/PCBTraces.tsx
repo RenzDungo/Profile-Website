@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface PCBLink {
   from: React.RefObject<HTMLElement>;
@@ -53,23 +53,51 @@ function buildHorizontalPath(x1: number, y1: number, x2: number, y2: number) {
   ].join(" ");
 }
 
+const LAYER_STYLE: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  pointerEvents: "none",
+  overflow: "visible",
+};
+
 // Functional (animated) copper traces that connect a hub chip to the ICs it
 // drives. Each trace is drawn twice: first as a wide board-coloured stroke
 // that acts as a solder-mask clearance over the decorative background
 // copper, then as the glowing signal trace itself.
+//
+// Performance notes: the glowing traces carry a drop-shadow filter, and the
+// travelling pulses animate forever. Keeping the pulses in their own <svg>
+// means the browser only repaints a few tiny circles each frame instead of
+// re-rasterising every filtered trace. Pulses are not created until the
+// board has scrolled into view, and their clock is paused whenever the board
+// is off-screen, so hidden boards cost nothing per frame.
 export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
   const [paths, setPaths] = useState<TracePath[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [active, setActive] = useState(false);
+  const pulseSvgRef = useRef<SVGSVGElement>(null);
+
+  // Pages pass a fresh `links` array literal on every render. Reading it
+  // through a ref keeps the measuring effect below from re-running (and
+  // forcing layout) each time the parent page re-renders.
+  const linksRef = useRef(links);
+  useEffect(() => {
+    linksRef.current = links;
+  });
 
   const recompute = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
     const containerBox = container.getBoundingClientRect();
-    setSize({ width: containerBox.width, height: containerBox.height });
+    setSize((prev) =>
+      prev.width === containerBox.width && prev.height === containerBox.height
+        ? prev
+        : { width: containerBox.width, height: containerBox.height }
+    );
 
     const newPaths: TracePath[] = [];
-    links.forEach((link, i) => {
+    linksRef.current.forEach((link, i) => {
       const source = link.from.current;
       const target = link.to.current;
       if (!source || !target) return;
@@ -105,8 +133,11 @@ export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
       }
       newPaths.push({ id: `trace-${i}`, d });
     });
-    setPaths(newPaths);
-  }, [containerRef, links]);
+    setPaths((prev) => {
+      if (prev.length === newPaths.length && prev.every((p, i) => p.d === newPaths[i].d)) return prev;
+      return newPaths;
+    });
+  }, [containerRef]);
 
   useEffect(() => {
     recompute();
@@ -120,6 +151,7 @@ export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
     };
   }, [recompute, containerRef]);
 
+  // Light the traces the first time the board comes into view.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -136,27 +168,52 @@ export default function PCBTraces({ containerRef, links }: PCBTracesProps) {
     return () => io.disconnect();
   }, [containerRef]);
 
+  // Freeze the pulse animation while the board is off-screen (another board
+  // is showing, or this region is scrolled away) and resume when it returns.
+  useEffect(() => {
+    const container = containerRef.current;
+    const svg = pulseSvgRef.current;
+    if (!container || !svg || !active) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) svg.unpauseAnimations();
+      else svg.pauseAnimations();
+    });
+    io.observe(container);
+    return () => io.disconnect();
+  }, [containerRef, active]);
+
   return (
-    <svg
-      className="pcb-traces"
-      width={size.width}
-      height={size.height}
-      style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", overflow: "visible" }}
-      aria-hidden="true"
-    >
-      <g className="pcb-traces-clearance">
-        {paths.map((p) => (
-          <path key={p.id} d={p.d} className="pcb-trace-clear" />
-        ))}
-      </g>
-      {paths.map((p) => (
-        <g key={p.id} className={active ? "pcb-trace pcb-trace-active" : "pcb-trace"}>
-          <path d={p.d} className="pcb-trace-path" pathLength={100} />
-          <circle r={3} className="pcb-trace-pulse">
-            <animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path={p.d} />
-          </circle>
+    <>
+      <svg className="pcb-traces" width={size.width} height={size.height} style={LAYER_STYLE} aria-hidden="true">
+        <g className="pcb-traces-clearance">
+          {paths.map((p) => (
+            <path key={p.id} d={p.d} className="pcb-trace-clear" />
+          ))}
         </g>
-      ))}
-    </svg>
+        {paths.map((p) => (
+          <g key={p.id} className={active ? "pcb-trace pcb-trace-active" : "pcb-trace"}>
+            <path d={p.d} className="pcb-trace-path" pathLength={100} />
+          </g>
+        ))}
+      </svg>
+      {active && (
+        <svg
+          ref={pulseSvgRef}
+          className="pcb-traces"
+          width={size.width}
+          height={size.height}
+          style={LAYER_STYLE}
+          aria-hidden="true"
+        >
+          {paths.map((p) => (
+            <g key={p.id} className="pcb-trace pcb-trace-active">
+              <circle r={3} className="pcb-trace-pulse">
+                <animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path={p.d} />
+              </circle>
+            </g>
+          ))}
+        </svg>
+      )}
+    </>
   );
 }

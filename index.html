@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpg" href="/icon.jpg" />
+    <!-- The portrait is the largest thing on the first board. Preloading it here
+         lets the download start alongside the JS bundle instead of after it. -->
+    <link
+      rel="preload"
+      as="image"
+      fetchpriority="high"
+      href="/src/assets/profile-960.webp"
+      imagesrcset="/src/assets/profile-640.webp 640w, /src/assets/profile-960.webp 960w, /src/assets/profile-1280.webp 1280w, /src/assets/profile-1920.webp 1920w"
+      imagesizes="(min-width: 992px) 33vw, (min-width: 768px) 42vw, 100vw"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Renz Dungo</title>
   </head>
